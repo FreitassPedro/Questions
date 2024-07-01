@@ -16,6 +16,8 @@ public class Question {
 
     @Column(name = "materia")
     private String materia;
+
+    @Lob
     @Column(name = "enunciado")
     private String enunciado;
 

@@ -7,26 +7,48 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
+    <style>
+        body {
+            background-color: #99ccff;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container bg-light-subtle">
     <div class="card mt-4">
         <div class="card-header">
-            <h5 class="card-title" th:text="${question.materia}">Matéria</h5>
+            <h5 class="card-title" th:text="${question.materia}"></h5>
         </div>
         <div class="card-body">
-            <p class="card-text" th:text="${question.enunciado}">Enunciado da questão</p>
+            <div>
+                <strong>
+                    <span class="card-text" th:text="${question.enunciado}"></span>
+                </strong>
+            </div>
+        </div>
+        <br><br>
 
-            <div class="list-group">
-                <div th:each="alternativa : ${question.alternativas}" class="list-group-item">
-                    <span th:text="${alternativa.key + ') ' + alternativa.value}"></span>
+        <div class="list-group">
+            <div th:each="alternativa, status : ${question.alternativas}" class="list-group-item">
+                <div>
+                    <input type="radio" th:id="${'alternativa' + status.index}"
+                           th:name="resposta" th:value="${alternativa.key}" class="btn-check">
+                    <label th:for="${'alternativa' + status.index}" class="btn btn-outline-primary">
+                        <span th:text="${alternativa.key}"></span>
+                    </label>
+
+                    <label th:for="${'alternativa' + status.index}">
+                        <span th:text="${'  ' + alternativa.value}"></span>
+                    </label>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script th:src="@{/jquery-3.6.0-dist/jquery-3.6.0.min.js}"></script>
 
 </body>
 </html>
