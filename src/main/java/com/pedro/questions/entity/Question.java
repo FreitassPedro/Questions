@@ -14,10 +14,12 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "materia")
     private String materia;
+    @Column(name = "enunciado")
     private String enunciado;
 
-
+    @Column(name = "alternativas")
     private HashMap<Character, String> alternativas;
     private Character respostaCorreta;
     private Character respostaUsuario;

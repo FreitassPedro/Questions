@@ -1,6 +1,8 @@
 package com.pedro.questions;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.repository.QuestionRepository;
+import com.pedro.questions.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,15 +16,15 @@ public class QuestionsApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner() {
+	public CommandLineRunner commandLineRunner(QuestionRepository questionRepository) {
 
 		return runner -> {
-			testandoPrograma();
+			testandoPrograma(questionRepository);
 		};
 
 	}
 
-	private void testandoPrograma() {
+	private void testandoPrograma(QuestionRepository questionRepository) {
 
 		Question q1 = new Question();
 		q1.setMateria("Matematica");
@@ -32,9 +34,15 @@ public class QuestionsApplication {
 		q1.addAlternativas('C', "4cm²");
 		q1.addAlternativas('D', "2.552cm²");
 
+		QuestionService questionService = new QuestionService(questionRepository);
 		q1.setRespostaCorreta('C');
 
 		System.out.println(q1);
+		questionService.save(q1);
+
+		System.out.println("----------------");
+		Question byId = questionService.findById(1);
+		System.out.println("Result:" + byId.toString());
 
 	}
 }
