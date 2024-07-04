@@ -20,10 +20,13 @@ public class Users {
     private int id;
 
 
-    private String name;
     @Column(unique = true)
     private String email;
 
     private String password;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
+    private UsersType userTypeId;
 
 }

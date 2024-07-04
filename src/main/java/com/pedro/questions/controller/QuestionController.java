@@ -1,7 +1,10 @@
 package com.pedro.questions.controller;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.service.QuestionService;
+import com.pedro.questions.service.UserStatisticsService;
+import com.pedro.questions.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final UserStatisticsService userStatisticsService;
 
     @GetMapping("/question")
     public String showQuestion(Model model) {
@@ -41,9 +45,13 @@ public class QuestionController {
         System.out.println("Resposta correta: " + question.getRespostaCorreta()
                 + " | "
                 + "Resposta do Usuario: " + question.getRespostaUsuario());
-        if (question.getRespostaUsuario() == question.getRespostaCorreta()) {
-            System.out.println("Resposta correta");
-        } else System.out.println("Resposta errada");
+        boolean isCorrect = question.getRespostaCorreta() == question.getRespostaUsuario();
+        userStatisticsService.processData(question, isCorrect);
+
+
+
+
+
         System.out.println();
         return "redirect:/question";
     }
