@@ -1,5 +1,6 @@
 package com.pedro.questions.controller;
 
+import com.pedro.questions.entity.Question;
 import com.pedro.questions.entity.Users;
 import com.pedro.questions.service.UsersService;
 import lombok.AllArgsConstructor;
@@ -9,13 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@AllArgsConstructor
 public class UsersController {
 
     private final UsersService usersService;
 
-    public UsersController(UsersService usersService) {
-        this.usersService = usersService;
-    }
 
     @GetMapping("/register")
     public String register(Model model) {
