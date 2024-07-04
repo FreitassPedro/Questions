@@ -13,6 +13,11 @@ public class HubController {
     @Autowired
     private QuestionService questionService;
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/question";
+    }
+
     @GetMapping("/question")
     public String showQuestion(Model model) {
         Question byId = questionService.findById(2);
@@ -20,9 +25,28 @@ public class HubController {
         return "question/random-question";
     }
 
-    @PostMapping("/responder")
-    public String responderQuestao(Model model, Character resposta) {
+    @GetMapping("/question/{id}")
+    public String showQuestionById(@PathVariable("id") int id,
+                                   Model model) {
+        Question byId = questionService.findById(id);
+        model.addAttribute("question", byId);
 
-        return "";
+        model.addAttribute("respostaUsuario", null);
+
+        return "question/random-question";
     }
+
+    @PostMapping("/processAnswer")
+    public String processAnswer(@ModelAttribute("question") Question question) {
+
+        System.out.println("resposta correta: " + question.getRespostaCorreta());
+        System.out.println("resposta do usuario: " + question.getRespostaUsuario());
+        boolean answerIsCorrect = false;
+        if (question.getRespostaUsuario() == question.getRespostaCorreta()) {
+            System.out.println("Resposta correta");
+        }
+        else System.out.println("Resposta errada");
+        return "question/random-question";
+    }
+
 }

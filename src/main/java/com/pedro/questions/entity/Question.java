@@ -3,13 +3,13 @@ package com.pedro.questions.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 @Entity
 @Getter @Setter @ToString
-@Table(name = "questions")
-public class Question {
-
+@Table(name = "question")
+public class Question implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -23,7 +23,9 @@ public class Question {
 
     @Column(name = "alternativas")
     private HashMap<Character, String> alternativas;
+    @Column(name = "resposta_correta")
     private Character respostaCorreta;
+
     private Character respostaUsuario;
 
     public void addAlternativas(Character letra, String textoOpcao) {
@@ -32,15 +34,15 @@ public class Question {
         alternativas.put(letra, textoOpcao);
     }
 
-    public Question(int id, String materia, String enunciado, Character respostaUsuario, Character respostaCorreta) {
+    public Question(int id, String materia, String enunciado, Character respostaCorreta) {
         this.id = id;
         this.materia = materia;
         this.enunciado = enunciado;
-        this.respostaUsuario = respostaUsuario;
         this.respostaCorreta = respostaCorreta;
     }
 
     public Question() {
     }
+
 }
 

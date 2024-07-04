@@ -9,18 +9,18 @@
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <style>
         body {
-            background-color: #99ccff;
+            background-color: #008B8B;
         }
     </style>
 </head>
 <body>
 
 <div class="container bg-light-subtle">
-    <div class="card mt-4">
+    <div class="card mt-4 shadow-lg p-3 mb-5 bg-white rounded">
         <div class="card-header">
             <h5 class="card-title" th:text="${question.materia}"></h5>
         </div>
-        <div class="card-body">
+        <div class="card-body font-weight-normal">
             <div>
                 <strong>
                     <span class="card-text" th:text="${question.enunciado}"></span>
@@ -29,11 +29,14 @@
         </div>
         <br><br>
 
-        <div class="list-group">
+        <form th:action="@{/processAnswer}" th:object="${question}" method="POST" class="list-group" >
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{respostaCorreta}">
             <div th:each="alternativa, status : ${question.alternativas}" class="list-group-item">
-                <div>
+
                     <input type="radio" th:id="${'alternativa' + status.index}"
-                           th:name="resposta" th:value="${alternativa.key}" class="btn-check">
+                           th:field="*{respostaUsuario}" th:value="${alternativa.key}" class="btn-check">
+
                     <label th:for="${'alternativa' + status.index}" class="btn btn-outline-primary">
                         <span th:text="${alternativa.key}"></span>
                     </label>
@@ -41,9 +44,13 @@
                     <label th:for="${'alternativa' + status.index}">
                         <span th:text="${'  ' + alternativa.value}"></span>
                     </label>
-                </div>
+
             </div>
-        </div>
+
+
+            <button type="submit"  class=" btn btn-primary">Responder</button>
+        </form>
+
     </div>
 </div>
 
