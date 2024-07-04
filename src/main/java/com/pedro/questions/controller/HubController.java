@@ -1,6 +1,7 @@
 package com.pedro.questions.controller;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.entity.Users;
 import com.pedro.questions.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +14,8 @@ public class HubController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping("/")
-    public String index() {
-        return "redirect:/question";
+    public String home() {
+        return "question/random-question";
     }
 
     @GetMapping("/question")
@@ -39,14 +39,15 @@ public class HubController {
     @PostMapping("/processAnswer")
     public String processAnswer(@ModelAttribute("question") Question question) {
 
-        System.out.println("resposta correta: " + question.getRespostaCorreta());
-        System.out.println("resposta do usuario: " + question.getRespostaUsuario());
-        boolean answerIsCorrect = false;
+        System.out.println("Resposta correta: " + question.getRespostaCorreta()
+                + " | "
+                + "Resposta do Usuario: " + question.getRespostaUsuario());
         if (question.getRespostaUsuario() == question.getRespostaCorreta()) {
             System.out.println("Resposta correta");
-        }
-        else System.out.println("Resposta errada");
-        return "question/random-question";
+        } else System.out.println("Resposta errada");
+        System.out.println();
+        return "redirect:/question";
     }
+
 
 }

@@ -26,6 +26,7 @@ public class Question implements Serializable {
     @Column(name = "resposta_correta")
     private Character respostaCorreta;
 
+    @Column(name = "resposta")
     private Character respostaUsuario;
 
     public void addAlternativas(Character letra, String textoOpcao) {
@@ -34,11 +35,12 @@ public class Question implements Serializable {
         alternativas.put(letra, textoOpcao);
     }
 
-    public Question(int id, String materia, String enunciado, Character respostaCorreta) {
+    public Question(int id, String materia, String enunciado, Character respostaCorreta, Character respostaUsuario) {
         this.id = id;
         this.materia = materia;
         this.enunciado = enunciado;
         this.respostaCorreta = respostaCorreta;
+        this.respostaUsuario = respostaUsuario;
     }
 
     public Question() {
