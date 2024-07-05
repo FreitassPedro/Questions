@@ -7,12 +7,14 @@ import com.pedro.questions.repository.UserStatisticRepository;
 import com.pedro.questions.repository.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserStatisticsService {
@@ -35,6 +37,7 @@ public class UserStatisticsService {
             boolean isCorrect = question.getRespostaCorreta() == question.getRespostaUsuario();
             userStatistics.addAnswer(question.getId(), isCorrect);
             userStatisticRepository.save(userStatistics);
+            log.info("Verificando resposta... " + getClass().getSimpleName() + " | " + userStatistics);
         }
 
 

@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 @Entity @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Table()
@@ -28,24 +26,32 @@ public class UserStatistics implements Serializable {
     private int totalCorrect;
     private int totalWrong;
 
-    @OneToMany
-    @MapsId
-    @JoinColumn(name = "questions_id")
-    private Map<Integer, Boolean> answered;
+    public int getTotalAnswered() {
+        return answered.size();
+    }
+
+    @OneToMany(mappedBy = "userStatistics", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<QuestionAnswered> answered;
+
 
     public void addAnswer(int questionId, boolean isCorrect) {
-        if (answered == null) answered = new HashMap<>();
+        Optional<QuestionAnswered> existingAnswer = answered.stream()
+                .filter(qa -> qa.getQuestionId() == questionId)
+                .findFirst();
 
-        if (answered.containsKey(questionId)) {
-            if (answered.get(questionId)) totalCorrect--;
-            else totalWrong--;
-            answered.replace(questionId, isCorrect);
-
+        if (existingAnswer.isPresent()) {
+            // Questão já respondida, atualizar se necessário
+            QuestionAnswered answer = existingAnswer.get();
+            if (answer.isCorrect() != isCorrect) {
+                answer.setCorrect(isCorrect);
+                // Atualizar contadores (totalCorrect, totalWrong) conforme necessário
+            }
         } else {
-            answered.put(questionId, isCorrect);
+            // Questão não respondida, adicionar nova resposta
+            answered.add(new QuestionAnswered(0, this, questionId, isCorrect));
             totalAnswered++;
+            if (isCorrect) totalCorrect++;
+            else totalWrong++;
         }
-        if (isCorrect) totalCorrect++;
-        else totalWrong++;
     }
 }

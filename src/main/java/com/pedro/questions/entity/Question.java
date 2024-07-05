@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 @Entity
-@Getter @Setter @ToString
+@Getter @Setter @ToString @EqualsAndHashCode
 @Table(name = "question")
 public class Question implements Serializable {
     @Id

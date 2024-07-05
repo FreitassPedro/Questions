@@ -49,10 +49,10 @@ public class QuestionController {
                 + " | "
                 + "Resposta do Usuario: " + question.getRespostaUsuario());
 
+        System.out.println("logged user: " + currentUser.toString());
         userStatisticsService.processData(question, currentUser);
 
 
-        System.out.println();
         return "redirect:/question";
     }
 
