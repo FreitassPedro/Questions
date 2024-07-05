@@ -21,11 +21,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         userDetails.getUsername();
         log.info("The username {} is logged in.", userDetails.getUsername());
 
-       /* boolean hasJobSeekerRole = authentication.getAuthorities().stream()
-                .anyMatch(role -> role.getAuthority().equals("Job Seeker"));
-        boolean hasRecruiterRole = authentication.getAuthorities().stream()
-                .anyMatch(role -> role.getAuthority().equals("Recruiter"));
-*/
 
         response.sendRedirect("/question");
     }

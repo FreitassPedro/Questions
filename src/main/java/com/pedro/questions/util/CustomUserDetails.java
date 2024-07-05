@@ -1,8 +1,9 @@
 package com.pedro.questions.util;
 
 import com.pedro.questions.entity.Users;
-import com.pedro.questions.entity.UsersType;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +15,15 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetails.class);
     private final Users user;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UsersType usersType = user.getUserTypeId();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(usersType.getUserTypeName()));
+
+        log.info("testando " + getClass().getSimpleName());
 
         return authorities;
     }

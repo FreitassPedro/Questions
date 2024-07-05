@@ -1,12 +1,13 @@
 package com.pedro.questions.controller;
 
 import com.pedro.questions.entity.Question;
-import com.pedro.questions.entity.UserStatistics;
+import com.pedro.questions.entity.Users;
 import com.pedro.questions.service.QuestionService;
 import com.pedro.questions.service.UserStatisticsService;
-import com.pedro.questions.service.UsersService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,18 +43,25 @@ public class QuestionController {
     @PostMapping("/processAnswer")
     public String processAnswer(@ModelAttribute("question") Question question) {
 
+        Users currentUser =  getAuthentication();
+
         System.out.println("Resposta correta: " + question.getRespostaCorreta()
                 + " | "
                 + "Resposta do Usuario: " + question.getRespostaUsuario());
-        boolean isCorrect = question.getRespostaCorreta() == question.getRespostaUsuario();
-        userStatisticsService.processData(question, isCorrect);
 
-
-
+        userStatisticsService.processData(question, currentUser);
 
 
         System.out.println();
         return "redirect:/question";
+    }
+
+    private Users getAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return userStatisticsService.getCurrentUser(authentication);
+        }
+        return null;
     }
 
 

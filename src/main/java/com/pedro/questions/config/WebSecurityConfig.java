@@ -2,6 +2,8 @@ package com.pedro.questions.config;
 
 import com.pedro.questions.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 @Configuration
 public class WebSecurityConfig {
+    private static final Logger log = LoggerFactory.getLogger(WebSecurityConfig.class);
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
@@ -40,6 +43,7 @@ public class WebSecurityConfig {
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("testando logging..");
         http.authenticationProvider(authenticationProvider());
 
         http.authorizeHttpRequests(auth -> {
@@ -48,7 +52,10 @@ public class WebSecurityConfig {
         });
 
 
-        http.formLogin(form -> form.loginPage("/login").permitAll()
+        http.formLogin(form -> form.loginPage("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .permitAll()
                         .successHandler(customAuthenticationSuccessHandler))
                 .logout(logout -> {
                     logout.logoutUrl("/logout");

@@ -1,7 +1,9 @@
 package com.pedro.questions;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.entity.Users;
 import com.pedro.questions.repository.QuestionRepository;
+import com.pedro.questions.repository.UsersRepository;
 import com.pedro.questions.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,10 +18,11 @@ public class QuestionsApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(QuestionRepository questionRepository) {
+	public CommandLineRunner commandLineRunner(QuestionRepository questionRepository, UsersRepository usersRepository) {
 
 		return runner -> {
 			testandoPrograma(questionRepository);
+			createUser(usersRepository);
 		};
 
 	}
@@ -39,13 +42,23 @@ public class QuestionsApplication {
 		q1.setRespostaCorreta('C');
 		questionService.save(q1);
 
-		Question q2 = createQuestion2();
+		Question q2 = createQuestion();
 		questionRepository.save(q2);
 
 
 	}
 
-	private static Question createQuestion2() {
+	private void createUser(UsersRepository usersRepository) {
+
+		Users user1 = new Users();
+		user1.setActive(false);
+		user1.setEmail("pedro@email.com");
+		user1.setPassword("$2a$12$2KuZTXvtyloztsgYhtGi8upp8sYlXdWmsJMpk5LbnuONPZdXu8.L6");
+
+		usersRepository.save(user1);
+	}
+
+	private static Question createQuestion() {
 		Question q2 = new Question();
 		q2.setMateria("Matematica");
 		q2.setEnunciado("A Petrobrás retomou recentemente o interesse em explorar a bacia da foz do rio Amazonas, após estudos que estimam grandes jazidas de petróleo na região. Sabe-se que a distância entre um dos poços de petróleo e a foz do rio Amazonas é de 500 km. \n" +
