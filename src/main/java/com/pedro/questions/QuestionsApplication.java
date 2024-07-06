@@ -2,6 +2,8 @@ package com.pedro.questions;
 
 import com.pedro.questions.entity.Question;
 import com.pedro.questions.entity.Users;
+import com.pedro.questions.entity.enums.Materia;
+import com.pedro.questions.entity.enums.Topico;
 import com.pedro.questions.repository.QuestionRepository;
 import com.pedro.questions.repository.UsersRepository;
 import com.pedro.questions.service.QuestionService;
@@ -32,7 +34,8 @@ public class QuestionsApplication {
 		QuestionService questionService = new QuestionService(questionRepository);
 		Question q1 = new Question();
 
-		q1.setMateria("Matematica");
+		q1.setMateria(Materia.MATEMATICA);
+		q1.setTopico(Topico.TRIGONOMETRIA);
 		q1.setEnunciado("Calcule a área do quadrado de lado 2");
 		q1.addAlternativas('A', "4.32cm²");
 		q1.addAlternativas('B', "1cm²");
@@ -60,7 +63,8 @@ public class QuestionsApplication {
 
 	private static Question createQuestion() {
 		Question q2 = new Question();
-		q2.setMateria("Matematica");
+		q2.setMateria(Materia.MATEMATICA);
+		q2.setTopico(Topico.ESCALA);
 		q2.setEnunciado("A Petrobrás retomou recentemente o interesse em explorar a bacia da foz do rio Amazonas, após estudos que estimam grandes jazidas de petróleo na região. Sabe-se que a distância entre um dos poços de petróleo e a foz do rio Amazonas é de 500 km. \n" +
 				"Qual é a escala de um mapa em que essa distância corresponde a 4 cm?");
 

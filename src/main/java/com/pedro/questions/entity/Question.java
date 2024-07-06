@@ -1,21 +1,27 @@
 package com.pedro.questions.entity;
 
+import com.pedro.questions.entity.enums.Materia;
+import com.pedro.questions.entity.enums.Topico;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
+
 @Entity
-@Getter @Setter @ToString @EqualsAndHashCode
+@Getter @Setter @ToString @EqualsAndHashCode @AllArgsConstructor @NoArgsConstructor
 @Table(name = "question")
 public class Question implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "materia")
-    private String materia;
+    @Enumerated(EnumType.STRING)
+    private Materia materia;
+
+    @Enumerated(EnumType.STRING)
+    private Topico topico;
 
     @Lob
     @Column(name = "enunciado")
@@ -34,17 +40,6 @@ public class Question implements Serializable {
 
         alternativas.put(letra, textoOpcao);
     }
-
-    public Question(int id, String materia, String enunciado, Character respostaCorreta, Character respostaUsuario) {
-        this.id = id;
-        this.materia = materia;
-        this.enunciado = enunciado;
-        this.respostaCorreta = respostaCorreta;
-        this.respostaUsuario = respostaUsuario;
-    }
-
-    public Question() {
-    }
-
+    
 }
 
