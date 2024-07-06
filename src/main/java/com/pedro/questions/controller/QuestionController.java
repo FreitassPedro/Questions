@@ -1,6 +1,7 @@
 package com.pedro.questions.controller;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.entity.Users;
 import com.pedro.questions.service.QuestionService;
 import com.pedro.questions.service.UserStatisticsService;
@@ -50,7 +51,10 @@ public class QuestionController {
                 + "Resposta do Usuario: " + question.getRespostaUsuario());
 
         System.out.println("logged user: " + currentUser.toString());
-        userStatisticsService.processData(question, currentUser);
+
+        UserStatistics userStats = userStatisticsService.findByUserId(currentUser);
+
+        userStatisticsService.processAnswer(question, userStats);
 
 
         return "redirect:/question";

@@ -2,8 +2,7 @@ package com.pedro.questions.util;
 
 import com.pedro.questions.entity.Users;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomUserDetails.class);
     private final Users user;
 
 

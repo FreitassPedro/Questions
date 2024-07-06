@@ -9,7 +9,11 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.*;
 
-@Entity @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table()
 public class UserStatistics implements Serializable {
 
@@ -34,24 +38,38 @@ public class UserStatistics implements Serializable {
     private Set<QuestionAnswered> answered;
 
 
-    public void addAnswer(int questionId, boolean isCorrect) {
-        Optional<QuestionAnswered> existingAnswer = answered.stream()
-                .filter(qa -> qa.getQuestionId() == questionId)
-                .findFirst();
-
-        if (existingAnswer.isPresent()) {
-            // Questão já respondida, atualizar se necessário
-            QuestionAnswered answer = existingAnswer.get();
-            if (answer.isCorrect() != isCorrect) {
-                answer.setCorrect(isCorrect);
-                // Atualizar contadores (totalCorrect, totalWrong) conforme necessário
-            }
-        } else {
-            // Questão não respondida, adicionar nova resposta
-            answered.add(new QuestionAnswered(0, this, questionId, isCorrect));
-            totalAnswered++;
-            if (isCorrect) totalCorrect++;
-            else totalWrong++;
+    public void updateAnswer(QuestionAnswered newAnswer, boolean isCorrect) {
+        if (newAnswer.isCorrect() && !(isCorrect)) {
+            totalWrong++;
+            totalCorrect--;
+        } else if (!(newAnswer.isCorrect()) && isCorrect) {
+            totalWrong--;
+            totalCorrect++;
         }
+
+        Optional<QuestionAnswered> oldAnswer = answered.stream().filter(
+                qa -> qa.getQuestionId() == newAnswer.getQuestionId()
+        ).findFirst();
+        if (oldAnswer.isPresent()) {
+            answered.remove(oldAnswer);
+            answered.add(newAnswer);
+        }
+
     }
+
+    public void addNewAnswer(int id, boolean isCorrect) {
+        if (Objects.isNull(answered)) answered = new HashSet<>();
+
+        QuestionAnswered questionAnswered = new QuestionAnswered();
+        questionAnswered.setQuestionId(id);
+        questionAnswered.setCorrect(isCorrect);
+
+        answered.add(questionAnswered);
+        if (isCorrect) totalCorrect++;
+        else totalWrong++;
+
+        this.totalAnswered++;
+    }
+
+
 }

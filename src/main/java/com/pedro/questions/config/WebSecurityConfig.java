@@ -43,7 +43,6 @@ public class WebSecurityConfig {
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.info("testando logging..");
         http.authenticationProvider(authenticationProvider());
 
         http.authorizeHttpRequests(auth -> {
@@ -62,10 +61,9 @@ public class WebSecurityConfig {
                     logout.logoutSuccessUrl("/");
                 })
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console())) // Disable CSRF for H2
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // Desabilita CSRF para o H2 console
                 .headers(headers -> headers.frameOptions(frameOptionsConfig ->
                         frameOptionsConfig.sameOrigin())); // Allow framing for H2
-
 
         return http.build();
     }
