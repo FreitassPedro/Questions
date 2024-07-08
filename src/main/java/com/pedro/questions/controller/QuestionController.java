@@ -6,6 +6,7 @@ import com.pedro.questions.entity.Users;
 import com.pedro.questions.service.QuestionService;
 import com.pedro.questions.service.UserStatisticsService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 public class QuestionController {
@@ -46,16 +48,14 @@ public class QuestionController {
 
         Users currentUser =  getAuthentication();
 
-        System.out.println("Resposta correta: " + question.getRespostaCorreta()
+        log.info("Resposta correta: " + question.getRespostaCorreta()
                 + " | "
                 + "Resposta do Usuario: " + question.getRespostaUsuario());
 
-        System.out.println("logged user: " + currentUser.toString());
 
         UserStatistics userStats = userStatisticsService.findByUserId(currentUser);
 
         userStatisticsService.processAnswer(question, userStats);
-
 
         return "redirect:/question";
     }

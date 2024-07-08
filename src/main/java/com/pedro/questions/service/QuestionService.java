@@ -23,7 +23,7 @@ public class QuestionService {
 
     public Question findById(int id) {
         return questionRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("User nao eoncontrado")
+                () -> new EntityNotFoundException("Question not found")
         );
 
     }

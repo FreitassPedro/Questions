@@ -40,6 +40,6 @@ public class Question implements Serializable {
 
         alternativas.put(letra, textoOpcao);
     }
-    
+
 }
 
