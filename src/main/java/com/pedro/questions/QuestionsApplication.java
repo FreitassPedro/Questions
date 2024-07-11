@@ -1,16 +1,19 @@
 package com.pedro.questions;
 
 import com.pedro.questions.entity.Question;
+import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.entity.Users;
 import com.pedro.questions.entity.enums.Materia;
 import com.pedro.questions.entity.enums.Topico;
 import com.pedro.questions.repository.QuestionRepository;
+import com.pedro.questions.repository.UserStatisticRepository;
 import com.pedro.questions.repository.UsersRepository;
 import com.pedro.questions.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
 public class QuestionsApplication {
@@ -20,17 +23,51 @@ public class QuestionsApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(QuestionRepository questionRepository, UsersRepository usersRepository) {
+	public CommandLineRunner commandLineRunner(QuestionRepository questionRepository,
+											   UsersRepository usersRepository,
+											   UserStatisticRepository userStatisticRepository) {
 
 		return runner -> {
-			testandoPrograma(questionRepository);
+			criandoQuestoes(questionRepository);
 			createUser(usersRepository);
+		//	addAutomaticAnswers(userStatisticRepository, usersRepository);
 		};
 
 	}
 
-	private void testandoPrograma(QuestionRepository questionRepository) {
+	@Transactional
+	private void addAutomaticAnswers(UserStatisticRepository userStatisticRepository, UsersRepository usersRepository) {
+		Users user1 = new Users();
+		user1.setActive(false);
+		user1.setEmail("joao@email.com");
+		user1.setPassword("$2a$12$2KuZTXvtyloztsgYhtGi8upp8sYlXdWmsJMpk5LbnuONPZdXu8.L6");
 
+		Users savedUser = usersRepository.saveAndFlush(user1); // Salva o usuário primeiro
+		Users us = usersRepository.findByEmail("pedro@email.com").orElse(null);
+		UserStatistics userStats = userStatisticRepository.findById(us.getId()).orElse(new UserStatistics());
+
+		userStats.setUsers(savedUser); // Associa o usuário salvo
+		userStatisticRepository.save(userStats);
+
+		// Adicione as respostas ANTES de salvar
+		//userStats.addNewAnswer(1, false);
+		//userStats.addNewAnswer(2, true);
+		System.out.println(userStats.toString());
+		userStatisticRepository.save(userStats); // Salva userStats com as respostas
+	}
+
+	@Transactional
+	private void createUser(UsersRepository usersRepository) {
+		Users user1 = new Users();
+		user1.setActive(false);
+		user1.setEmail("pedro@email.com");
+		user1.setPassword("$2a$12$2KuZTXvtyloztsgYhtGi8upp8sYlXdWmsJMpk5LbnuONPZdXu8.L6");
+
+		// Salve o usuário e retorne a entidade gerenciada
+		usersRepository.saveAndFlush(user1);
+	}
+
+	private void criandoQuestoes(QuestionRepository questionRepository) {
 		QuestionService questionService = new QuestionService(questionRepository);
 		Question q1 = new Question();
 
@@ -48,17 +85,6 @@ public class QuestionsApplication {
 		Question q2 = createQuestion();
 		questionRepository.save(q2);
 
-
-	}
-
-	private void createUser(UsersRepository usersRepository) {
-
-		Users user1 = new Users();
-		user1.setActive(false);
-		user1.setEmail("pedro@email.com");
-		user1.setPassword("$2a$12$2KuZTXvtyloztsgYhtGi8upp8sYlXdWmsJMpk5LbnuONPZdXu8.L6");
-
-		usersRepository.save(user1);
 	}
 
 	private static Question createQuestion() {

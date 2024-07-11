@@ -2,6 +2,7 @@ package com.pedro.questions.controller;
 
 import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.entity.Users;
+import com.pedro.questions.repository.QuestionAnsweredRepository;
 import com.pedro.questions.service.UserStatisticsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -11,12 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 @AllArgsConstructor
-public class Statistics {
+public class StatisticsController {
 
     private final UserStatisticsService userStatisticsService;
-
+    private QuestionAnsweredRepository questionAnsweredRepository;
 
     @GetMapping("/statistics")
     public String statistics(Model model) {
@@ -34,4 +37,5 @@ public class Statistics {
         }
         return null;
     }
+
 }

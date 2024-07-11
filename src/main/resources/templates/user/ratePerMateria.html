@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Estatísticas de Respostas por Matéria</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*[# th:if="${userStatistics != null}"]*/
+    const ctx = document.getElementById('chart').getContext('2d');
+    const materias = [[${taxaAcertosPorMateria.![materia]}]];
+    const taxasAcertos = [[${taxaAcertosPorMateria.![taxaAcerto]}]]
+
+    new Chart(ctx, {
+        type: 'bar', // Mudamos o tipo para 'bar'
+        data: {
+            labels: materias,
+            datasets: [{
+                label: 'Taxa de Acertos (%)',
+                data: taxasAcertos,
+                backgroundColor: '#28a745' // Cor verde para as barras
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100 // Define o valor máximo do eixo Y para 100%
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Taxa de Acertos por Matéria'
+                }
+            }
+        }
+    });
+    /*[/]*/
+</script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.pedro.questions.entity;
 
+import com.pedro.questions.entity.enums.Materia;
+import com.pedro.questions.entity.enums.Topico;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 @Table(name = "question_answers")
 public class QuestionAnswered {
 
@@ -19,6 +22,12 @@ public class QuestionAnswered {
     @ManyToOne
     @JoinColumn(name = "user_statistics_id")
     private UserStatistics userStatistics;
+
+    @Enumerated(EnumType.STRING) // Supondo que Materia seja um enum
+    private Materia materia;
+
+    @Enumerated(EnumType.STRING)
+    private Topico topico;
 
     @Column(name = "question_id")
     private int questionId;

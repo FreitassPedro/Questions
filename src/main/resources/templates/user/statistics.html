@@ -14,14 +14,14 @@
             <h5 class="card-title">Estatísticas de Respostas</h5>
         </div>
         <div class="card-body">
-            <canvas id="chart" class="w-50"></canvas>
+            <canvas id="chart"></canvas>
         </div>
     </div>
 </div>
 
 <script th:inline="javascript">
     const ctx = document.getElementById('chart').getContext('2d');
-     const acertos = [[${userStatistics.totalCorrect}]];
+    const acertos = [[${userStatistics.totalCorrect}]];
     const erros = [[${userStatistics.totalWrong}]];
 
     new Chart(ctx, {
@@ -46,6 +46,8 @@
             }
         }
     });
+
+
 </script>
 </body>
 </html>

@@ -1,10 +1,8 @@
 package com.pedro.questions.entity;
 
+import com.pedro.questions.entity.enums.Materia;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -14,6 +12,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table()
 public class UserStatistics implements Serializable {
 
@@ -21,7 +20,7 @@ public class UserStatistics implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE})
     @MapsId
     @JoinColumn(name = "user_id")
     private Users users;
@@ -36,6 +35,10 @@ public class UserStatistics implements Serializable {
 
     @OneToMany(mappedBy = "userStatistics", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionAnswered> answered;
+
+
+    @Transient // Não persistir o Map no banco de dados
+    private Map<Materia, Double> taxaAcertosPorMateria;
 
 
     public void updateAnswer(QuestionAnswered newAnswer, boolean isCorrect) {
@@ -55,14 +58,26 @@ public class UserStatistics implements Serializable {
             answered.add(newAnswer);
         }
 
+        updateMateria(newAnswer);
+
     }
 
-    public void addNewAnswer(int id, boolean isCorrect) {
+    private void updateMateria(QuestionAnswered questionAnswered) {
+        if (Objects.isNull(taxaAcertosPorMateria)) taxaAcertosPorMateria = new HashMap<>();
+        Materia materia = questionAnswered.getMateria();
+        if (taxaAcertosPorMateria.containsKey(questionAnswered.getMateria())) {
+            taxaAcertosPorMateria.replace(
+                    materia, taxaAcertosPorMateria.get(materia) + 1);
+        } else {
+            taxaAcertosPorMateria.put(materia, 1.0);
+        }
+    }
+
+    public void addNewAnswer(QuestionAnswered questionAnswered, boolean isCorrect) {
         if (Objects.isNull(answered)) answered = new HashSet<>();
 
-        QuestionAnswered questionAnswered = new QuestionAnswered();
-        questionAnswered.setQuestionId(id);
-        questionAnswered.setCorrect(isCorrect);
+        questionAnswered.setCorrect(isCorrect);;
+        updateMateria(questionAnswered);
 
         answered.add(questionAnswered);
         if (isCorrect) totalCorrect++;
