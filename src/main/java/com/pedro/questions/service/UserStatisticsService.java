@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -25,13 +26,18 @@ public class UserStatisticsService {
         boolean isCorrect = question.getRespostaCorreta() == question.getRespostaUsuario();
 
         QuestionAnswered questionAnswered = findQuestionIfWasAnswered(question);
-        questionAnswered.setMateria(question.getMateria());
-        System.out.println(questionAnswered.toString());
-        if (questionAnswered.getId() == 0) {
-            userStatistics.addNewAnswer(questionAnswered, isCorrect);
+        SubjectStatistics subjectStatistics = new SubjectStatistics();
+        subjectStatistics.setSubject(question.getSubject());
+
+        if (questionAnswered.getId() == null) {
+            questionAnswered.setCorrect(isCorrect);
+            userStatistics.addNewAnswer(questionAnswered, question.getSubject());
         } else {
             userStatistics.updateAnswer(questionAnswered, isCorrect);
         }
+
+        userStatistics.updateSubjectStatistics(question.getSubject(), isCorrect);
+        System.out.println("Rate perSubject:  " + userStatistics.getRatePerSubject().toString());
         userStatisticRepository.saveAndFlush(userStatistics);
     }
 

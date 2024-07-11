@@ -1,6 +1,6 @@
 package com.pedro.questions.entity;
 
-import com.pedro.questions.entity.enums.Materia;
+import com.pedro.questions.entity.enums.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,9 +36,7 @@ public class UserStatistics implements Serializable {
     @OneToMany(mappedBy = "userStatistics", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionAnswered> answered;
 
-
-    @Transient // Não persistir o Map no banco de dados
-    private Map<Materia, Double> taxaAcertosPorMateria;
+    private Map<Subject, SubjectStatistics> ratePerSubject;
 
 
     public void updateAnswer(QuestionAnswered newAnswer, boolean isCorrect) {
@@ -58,33 +56,34 @@ public class UserStatistics implements Serializable {
             answered.add(newAnswer);
         }
 
-        updateMateria(newAnswer);
-
     }
 
-    private void updateMateria(QuestionAnswered questionAnswered) {
-        if (Objects.isNull(taxaAcertosPorMateria)) taxaAcertosPorMateria = new HashMap<>();
-        Materia materia = questionAnswered.getMateria();
-        if (taxaAcertosPorMateria.containsKey(questionAnswered.getMateria())) {
-            taxaAcertosPorMateria.replace(
-                    materia, taxaAcertosPorMateria.get(materia) + 1);
-        } else {
-            taxaAcertosPorMateria.put(materia, 1.0);
-        }
-    }
-
-    public void addNewAnswer(QuestionAnswered questionAnswered, boolean isCorrect) {
+    public void addNewAnswer(QuestionAnswered questionAnswered, Subject subject) {
         if (Objects.isNull(answered)) answered = new HashSet<>();
 
-        questionAnswered.setCorrect(isCorrect);;
-        updateMateria(questionAnswered);
-
         answered.add(questionAnswered);
-        if (isCorrect) totalCorrect++;
+
+        if (questionAnswered.isCorrect()) totalCorrect++;
         else totalWrong++;
 
         this.totalAnswered++;
     }
 
+    public void updateSubjectStatistics(Subject subject, boolean isCorrect) {
+        if (Objects.isNull(ratePerSubject)) ratePerSubject = new HashMap<>();
+
+        if (ratePerSubject.containsKey(subject)) {
+            SubjectStatistics retrievedRate = ratePerSubject.get(subject);
+            retrievedRate.addAnswer(isCorrect);
+            ratePerSubject.replace(subject, retrievedRate);
+        } else {
+            SubjectStatistics newSubjectStatistics = SubjectStatistics.builder()
+                    .subject(subject)
+                    .build();
+            newSubjectStatistics.addAnswer(isCorrect);
+            ratePerSubject.put(subject, newSubjectStatistics);
+            System.out.println(ratePerSubject);
+        }
+    }
 
 }

@@ -1,7 +1,7 @@
 package com.pedro.questions.entity;
 
 import com.pedro.questions.entity.enums.Materia;
-import com.pedro.questions.entity.enums.Topico;
+import com.pedro.questions.entity.enums.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +21,7 @@ public class Question implements Serializable {
     private Materia materia;
 
     @Enumerated(EnumType.STRING)
-    private Topico topico;
+    private Subject subject;
 
     @Lob
     @Column(name = "enunciado")

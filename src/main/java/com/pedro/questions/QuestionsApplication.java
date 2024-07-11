@@ -4,7 +4,7 @@ import com.pedro.questions.entity.Question;
 import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.entity.Users;
 import com.pedro.questions.entity.enums.Materia;
-import com.pedro.questions.entity.enums.Topico;
+import com.pedro.questions.entity.enums.Subject;
 import com.pedro.questions.repository.QuestionRepository;
 import com.pedro.questions.repository.UserStatisticRepository;
 import com.pedro.questions.repository.UsersRepository;
@@ -30,31 +30,10 @@ public class QuestionsApplication {
 		return runner -> {
 			criandoQuestoes(questionRepository);
 			createUser(usersRepository);
-		//	addAutomaticAnswers(userStatisticRepository, usersRepository);
 		};
 
 	}
 
-	@Transactional
-	private void addAutomaticAnswers(UserStatisticRepository userStatisticRepository, UsersRepository usersRepository) {
-		Users user1 = new Users();
-		user1.setActive(false);
-		user1.setEmail("joao@email.com");
-		user1.setPassword("$2a$12$2KuZTXvtyloztsgYhtGi8upp8sYlXdWmsJMpk5LbnuONPZdXu8.L6");
-
-		Users savedUser = usersRepository.saveAndFlush(user1); // Salva o usuário primeiro
-		Users us = usersRepository.findByEmail("pedro@email.com").orElse(null);
-		UserStatistics userStats = userStatisticRepository.findById(us.getId()).orElse(new UserStatistics());
-
-		userStats.setUsers(savedUser); // Associa o usuário salvo
-		userStatisticRepository.save(userStats);
-
-		// Adicione as respostas ANTES de salvar
-		//userStats.addNewAnswer(1, false);
-		//userStats.addNewAnswer(2, true);
-		System.out.println(userStats.toString());
-		userStatisticRepository.save(userStats); // Salva userStats com as respostas
-	}
 
 	@Transactional
 	private void createUser(UsersRepository usersRepository) {
@@ -72,7 +51,7 @@ public class QuestionsApplication {
 		Question q1 = new Question();
 
 		q1.setMateria(Materia.MATEMATICA);
-		q1.setTopico(Topico.TRIGONOMETRIA);
+		q1.setSubject(Subject.TRIGONOMETRIA);
 		q1.setEnunciado("Calcule a área do quadrado de lado 2");
 		q1.addAlternativas('A', "4.32cm²");
 		q1.addAlternativas('B', "1cm²");
@@ -90,7 +69,7 @@ public class QuestionsApplication {
 	private static Question createQuestion() {
 		Question q2 = new Question();
 		q2.setMateria(Materia.MATEMATICA);
-		q2.setTopico(Topico.ESCALA);
+		q2.setSubject(Subject.ESCALA);
 		q2.setEnunciado("A Petrobrás retomou recentemente o interesse em explorar a bacia da foz do rio Amazonas, após estudos que estimam grandes jazidas de petróleo na região. Sabe-se que a distância entre um dos poços de petróleo e a foz do rio Amazonas é de 500 km. \n" +
 				"Qual é a escala de um mapa em que essa distância corresponde a 4 cm?");
 

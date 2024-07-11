@@ -3,6 +3,7 @@ package com.pedro.questions.controller;
 import com.pedro.questions.entity.Question;
 import com.pedro.questions.entity.UserStatistics;
 import com.pedro.questions.entity.Users;
+import com.pedro.questions.entity.enums.Subject;
 import com.pedro.questions.service.QuestionService;
 import com.pedro.questions.service.UserStatisticsService;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,8 @@ public class QuestionController {
 
 
         UserStatistics userStats = userStatisticsService.findByUserId(currentUser);
+        Subject questionSubject = questionService.findById(question.getId()).getSubject();
+        question.setSubject(questionSubject);
 
         userStatisticsService.processAnswer(question, userStats);
 

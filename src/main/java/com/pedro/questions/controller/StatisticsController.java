@@ -26,7 +26,7 @@ public class StatisticsController {
         Users currentUser = getAuthentication();
         UserStatistics userStats = userStatisticsService.findByUserId(currentUser);
         model.addAttribute("userStatistics", userStats);
-
+        System.out.println(userStats.getRatePerSubject().toString());
         return "user/statistics";
     }
 

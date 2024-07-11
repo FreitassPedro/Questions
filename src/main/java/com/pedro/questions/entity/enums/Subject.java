@@ -1,6 +1,6 @@
 package com.pedro.questions.entity.enums;
 
-public enum Topico {
+public enum Subject {
     TRIGONOMETRIA(Materia.MATEMATICA),
     ESCALA(Materia.MATEMATICA),
     TERMODINAMICA(Materia.FISICA),
@@ -10,7 +10,7 @@ public enum Topico {
 
     private final Materia materia;
 
-    Topico(Materia materia) {
+    Subject(Materia materia) {
         this.materia = materia;
     }
 
