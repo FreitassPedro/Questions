@@ -26,8 +26,6 @@ public class UserStatisticsService {
         boolean isCorrect = question.getRespostaCorreta() == question.getRespostaUsuario();
 
         QuestionAnswered questionAnswered = findQuestionIfWasAnswered(question);
-        SubjectStatistics subjectStatistics = new SubjectStatistics();
-        subjectStatistics.setSubject(question.getSubject());
 
         if (questionAnswered.getId() == null) {
             questionAnswered.setCorrect(isCorrect);
@@ -37,7 +35,7 @@ public class UserStatisticsService {
         }
 
         userStatistics.updateSubjectStatistics(question.getSubject(), isCorrect);
-        System.out.println("Rate perSubject:  " + userStatistics.getRatePerSubject().toString());
+        System.out.println("Rate perSubject:  " + userStatistics.getSubjectStatistics().toString());
         userStatisticRepository.saveAndFlush(userStatistics);
     }
 

@@ -5,21 +5,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode @ToString @Builder
+@Embeddable
 public class SubjectStatistics {
-
-
-    @Enumerated(EnumType.STRING)
-    @MapsId("subject")
-    private Subject subject;
-
     private int totalAnswered;
     private int totalCorrect;
-
+    private int totalWrong;
 
     protected void addAnswer(boolean isCorrect) {
         totalAnswered++;
         if (isCorrect) totalCorrect++;
     }
+
+
 }
 
 

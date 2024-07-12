@@ -36,7 +36,11 @@ public class UserStatistics implements Serializable {
     @OneToMany(mappedBy = "userStatistics", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionAnswered> answered;
 
-    private Map<Subject, SubjectStatistics> ratePerSubject;
+    @ElementCollection
+    @CollectionTable(name = "subject_statistics", joinColumns = @JoinColumn(name = "user_statistics_id"))
+    @MapKeyColumn(name = "subject")
+    @Column(name = "statistics")
+    private Map<Subject, SubjectStatistics> subjectStatistics;
 
 
     public void updateAnswer(QuestionAnswered newAnswer, boolean isCorrect) {
@@ -70,19 +74,18 @@ public class UserStatistics implements Serializable {
     }
 
     public void updateSubjectStatistics(Subject subject, boolean isCorrect) {
-        if (Objects.isNull(ratePerSubject)) ratePerSubject = new HashMap<>();
+        if (Objects.isNull(subjectStatistics)) subjectStatistics = new HashMap<>();
 
-        if (ratePerSubject.containsKey(subject)) {
-            SubjectStatistics retrievedRate = ratePerSubject.get(subject);
+        if (subjectStatistics.containsKey(subject)) {
+            SubjectStatistics retrievedRate = subjectStatistics.get(subject);
             retrievedRate.addAnswer(isCorrect);
-            ratePerSubject.replace(subject, retrievedRate);
+            subjectStatistics.replace(subject, retrievedRate);
         } else {
             SubjectStatistics newSubjectStatistics = SubjectStatistics.builder()
-                    .subject(subject)
                     .build();
             newSubjectStatistics.addAnswer(isCorrect);
-            ratePerSubject.put(subject, newSubjectStatistics);
-            System.out.println(ratePerSubject);
+            subjectStatistics.put(subject, newSubjectStatistics);
+            System.out.println(subjectStatistics);
         }
     }
 

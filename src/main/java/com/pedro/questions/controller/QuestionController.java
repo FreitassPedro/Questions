@@ -47,7 +47,7 @@ public class QuestionController {
     @PostMapping("/processAnswer")
     public String processAnswer(@ModelAttribute("question") Question question) {
 
-        Users currentUser =  getAuthentication();
+        Users currentUser = getAuthentication();
 
         log.info("Resposta correta: " + question.getRespostaCorreta()
                 + " | "
