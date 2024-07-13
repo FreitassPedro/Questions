@@ -3,6 +3,8 @@ package com.pedro.questions.entity;
 import com.pedro.questions.entity.enums.Subject;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.io.Serializable;
 import java.util.*;
@@ -40,6 +42,7 @@ public class UserStatistics implements Serializable {
     @CollectionTable(name = "subject_statistics", joinColumns = @JoinColumn(name = "user_statistics_id"))
     @MapKeyColumn(name = "subject")
     @Column(name = "statistics")
+    @Fetch(FetchMode.JOIN)
     private Map<Subject, SubjectStatistics> subjectStatistics;
 
 
@@ -81,11 +84,9 @@ public class UserStatistics implements Serializable {
             retrievedRate.addAnswer(isCorrect);
             subjectStatistics.replace(subject, retrievedRate);
         } else {
-            SubjectStatistics newSubjectStatistics = SubjectStatistics.builder()
-                    .build();
+            SubjectStatistics newSubjectStatistics = new SubjectStatistics();
             newSubjectStatistics.addAnswer(isCorrect);
             subjectStatistics.put(subject, newSubjectStatistics);
-            System.out.println(subjectStatistics);
         }
     }
 

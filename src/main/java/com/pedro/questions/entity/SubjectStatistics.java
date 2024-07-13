@@ -14,6 +14,7 @@ public class SubjectStatistics {
     protected void addAnswer(boolean isCorrect) {
         totalAnswered++;
         if (isCorrect) totalCorrect++;
+        else totalWrong++;
     }
 
 
