@@ -64,6 +64,15 @@ public class QuestionsApplication {
 		Question q2 = createQuestion();
 		questionRepository.save(q2);
 
+		Question q3 = new Question();
+		q3.setMateria(Materia.MATEMATICA);
+		q3.setSubject(Subject.TRIGONOMETRIA);
+		q3.setEnunciado("...");
+		q3.setRespostaCorreta('A');
+		q3.addAlternativas('A', "Correta");
+		q3.addAlternativas('B', "INCORRETA");
+		q3.addAlternativas('C', "INCORRETA");
+		questionRepository.save(q3);
 	}
 
 	private static Question createQuestion() {

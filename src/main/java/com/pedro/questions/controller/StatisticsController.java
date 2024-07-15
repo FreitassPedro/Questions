@@ -42,6 +42,7 @@ public class StatisticsController {
         Users currentUser = getAuthentication();
         UserStatistics userStatistics = userStatisticsService.findByUserId(currentUser);
         Hibernate.initialize(userStatistics.getSubjectStatistics());
+
         List<DataPoint> dataPointsRespondidas = userStatistics.getSubjectStatistics().entrySet().stream()
                 .map(entry -> new DataPoint(entry.getKey().toString(), entry.getValue().getTotalAnswered()))
                 .toList();
@@ -49,7 +50,7 @@ public class StatisticsController {
         List<DataPoint> dataPointsErradas = userStatistics.getSubjectStatistics().entrySet().stream()
                 .map(entry -> new DataPoint(entry.getKey().toString(), entry.getValue().getTotalWrong()))
                 .toList();
-        model.addAttribute("userStatistics", userStatistics);
+
         model.addAttribute("userStatistics", userStatistics);
         model.addAttribute("dataPointsRespondidas", dataPointsRespondidas);
         model.addAttribute("dataPointsErradas", dataPointsErradas);
